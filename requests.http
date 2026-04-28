@@ -1,0 +1,8 @@
+### POST request to /api/data
+POST http://localhost:3000/api/data
+Content-Type: application/json
+
+{"name": "John", "message": "Hello"}
+
+### GET request
+GET http://localhost:3000/
