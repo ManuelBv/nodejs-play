@@ -8,7 +8,29 @@ import {
   moveZeroesToEnd,
   twoSumSorted,
   subarraySumEquals,
+  collapseRepeatedChars,
+  removeAllDuplicates,
+  dfsPreorder,
+  dfsInorder,
+  dfsPostorder,
+  maxDepth,
 } from "./drills";
+
+// Shared reference tree for the DFS reference examples:
+//        1
+//       / \
+//      2   3
+//     / \
+//    4   5
+const dfsSampleTree = {
+  value: 1,
+  left: {
+    value: 2,
+    left: { value: 4, left: null, right: null },
+    right: { value: 5, left: null, right: null },
+  },
+  right: { value: 3, left: null, right: null },
+};
 
 // describe("hasPairWithSum", () => {
 //   it.each([
@@ -101,15 +123,15 @@ import {
 //   });
 // });
 
-describe("twoSumSorted", () => {
-  it.each([
-    [[1, 2, 3, 4, 6], 6, [1, 3]],
-    [[1, 2, 3], 5, [1, 2]],
-    [[-3, -1, 0, 2, 8], 2, [2, 3]],
-  ])("twoSumSorted(%j, %i) === %j", (nums, target, expected) => {
-    expect(twoSumSorted(nums, target)).toEqual(expected);
-  });
-});
+// describe("twoSumSorted", () => {
+//   it.each([
+//     [[1, 2, 3, 4, 6], 6, [1, 3]],
+//     [[1, 2, 3], 5, [1, 2]],
+//     [[-3, -1, 0, 2, 8], 2, [2, 3]],
+//   ])("twoSumSorted(%j, %i) === %j", (nums, target, expected) => {
+//     expect(twoSumSorted(nums, target)).toEqual(expected);
+//   });
+// });
 
 // describe("subarraySumEquals", () => {
 //   it.each([
@@ -120,3 +142,51 @@ describe("twoSumSorted", () => {
 //     expect(subarraySumEquals(nums, target)).toBe(expected);
 //   });
 // });
+
+// describe("collapseRepeatedChars", () => {
+//   it.each([
+//     ["cccab", "cab"],
+//     ["dddabdd", "dabd"],
+//     ["aabbcc", "abc"],
+//     ["abc", "abc"],
+//     ["", ""],
+//     ["aaaa", "a"],
+//   ])("collapseRepeatedChars(%s) === %s", (input, expected) => {
+//     expect(collapseRepeatedChars(input)).toBe(expected);
+//   });
+// });
+
+describe("DFS reference examples", () => {
+  it("dfsPreorder visits node -> left -> right", () => {
+    expect(dfsPreorder(dfsSampleTree)).toEqual([1, 2, 4, 5, 3]);
+  });
+
+  it("dfsInorder visits left -> node -> right", () => {
+    expect(dfsInorder(dfsSampleTree)).toEqual([4, 2, 5, 1, 3]);
+  });
+
+  it("dfsPostorder visits left -> right -> node", () => {
+    expect(dfsPostorder(dfsSampleTree)).toEqual([4, 5, 2, 3, 1]);
+  });
+
+  it.each([
+    [null, 0],
+    [{ value: 1, left: null, right: null }, 1],
+    [dfsSampleTree, 3],
+  ])("maxDepth(%j) === %i", (root, expected) => {
+    expect(maxDepth(root)).toBe(expected);
+  });
+});
+
+describe("removeAllDuplicates", () => {
+  it.each([
+    ["abccba", ""],
+    ["cccacccaa", "a"],
+    ["abc", "abc"],
+    ["", ""],
+    ["aabccba", "a"],
+    ["aaaa", ""],
+  ])("removeAllDuplicates(%s) === %s", (input, expected) => {
+    expect(removeAllDuplicates(input)).toBe(expected);
+  });
+});

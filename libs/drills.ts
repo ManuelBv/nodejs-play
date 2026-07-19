@@ -246,3 +246,176 @@ export function twoSumSorted(nums: number[], target: number): [number, number] {
 export function subarraySumEquals(nums: number[], target: number): number {
   throw new Error("Not implemented");
 }
+
+/**
+ * collapseRepeatedChars
+ *
+ * Given a string, collapse every run of consecutive identical characters
+ * down to a single instance of that character. Non-repeated characters
+ * are left untouched.
+ *
+ * @example
+ * collapseRepeatedChars("cccab")     // "cab"
+ * collapseRepeatedChars("dddabdd")   // "dabd"
+ * collapseRepeatedChars("aabbcc")    // "abc"
+ *
+ * Optimized O(n) reference (the recursive version above is O(n^2) worst
+ * case, since every `.slice(i)` copies the remaining string): walk the
+ * string once, only appending a character when it differs from the one
+ * before it — no re-slicing, no recursion, no repeated work.
+ *
+ *   function collapseRepeatedCharsIterative(s: string): string {
+ *     if (!s.length) return "";
+ *     let result = s[0];
+ *     for (let i = 1; i < s.length; i++) {
+ *       if (s[i] !== s[i - 1]) result += s[i];
+ *     }
+ *     return result;
+ *   }
+ */
+export function collapseRepeatedChars(s: string): string {
+  if (!s.length) {
+    return "";
+  }
+
+  if (s.length === 1) {
+    return s[0];
+  }
+
+  let newstring = "";
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] !== s[0]) {
+      newstring = s[0] + collapseRepeatedChars(s.slice(i));
+      return newstring;
+    }
+  }
+
+  return s[0];
+}
+
+/**
+ * removeAllDuplicates
+ *
+ * Given a string, delete every run of 2 or more consecutive identical
+ * characters entirely (0 left, not 1). Deleting a run can bring
+ * previously separated characters together into a *new* adjacent run —
+ * keep resolving until no run of length >= 2 remains anywhere.
+ *
+ * @example
+ * removeAllDuplicates("abccba")    // "" (cc deletes -> abba -> bb deletes -> aa -> deletes -> "")
+ * removeAllDuplicates("cccacccaa") // "a" (both ccc runs and the aa run delete; the lone a survives)
+ * removeAllDuplicates("abc")       // "abc" (no runs to delete)
+ */
+export function removeAllDuplicates(s: string): string {
+  throw new Error("Not implemented");
+}
+
+/**
+ * DFS REFERENCE EXAMPLE — depth-first search over a binary tree.
+ *
+ * This is not a drill to implement — it's a worked reference for the
+ * DFS/binary-tree topic that comes after the string drills above.
+ *
+ * The core idea of DFS: go as deep as possible down one path before
+ * backtracking, as opposed to BFS which explores level by level. On a
+ * tree, "as deep as possible" means: fully finish the left subtree,
+ * then fully finish the right subtree, before returning to the parent.
+ *
+ * Every recursive tree traversal has the same skeleton:
+ *   1. Base case: null node -> nothing to do, return.
+ *   2. Recurse into children (order depends on what you're computing).
+ *   3. Combine/use results on the way back up (post-order), or process
+ *      the node itself on the way down (pre-order) or between children
+ *      (in-order).
+ */
+type TreeNode = {
+  value: number;
+  left: TreeNode | null;
+  right: TreeNode | null;
+};
+
+/**
+ * dfsPreorder: node -> left -> right.
+ * Visits a node BEFORE its children. Useful when you need to process a
+ * node before you know anything about its subtrees (e.g. copying a tree,
+ * or serializing it root-first).
+ */
+export function dfsPreorder(
+  root: TreeNode | null,
+  out: number[] = [],
+): number[] {
+  if (root === null) return out; // base case: nothing here, stop descending
+
+  out.push(root.value); // visit node first
+  dfsPreorder(root.left, out); // then fully explore left
+  dfsPreorder(root.right, out); // then fully explore right
+
+  return out;
+}
+
+/**
+ * dfsInorder: left -> node -> right.
+ * On a binary SEARCH tree, this visits values in sorted order — that's
+ * the whole reason in-order traversal is useful/famous.
+ */
+export function dfsInorder(
+  root: TreeNode | null,
+  out: number[] = [],
+): number[] {
+  if (root === null) return out;
+
+  dfsInorder(root.left, out); // exhaust left subtree first
+  out.push(root.value); // visit node in the middle
+  dfsInorder(root.right, out); // then exhaust right subtree
+
+  return out;
+}
+
+/**
+ * dfsPostorder: left -> right -> node.
+ * Visits a node AFTER both children. Useful when a node's answer depends
+ * on its children's answers already being computed — e.g. computing
+ * subtree height/size, deleting a tree bottom-up, evaluating an
+ * expression tree.
+ *
+ * maxDepth below is the canonical example of *why* post-order matters:
+ * you cannot know a node's depth until you know both children's depths.
+ */
+export function dfsPostorder(
+  root: TreeNode | null,
+  out: number[] = [],
+): number[] {
+  if (root === null) return out;
+
+  dfsPostorder(root.left, out);
+  dfsPostorder(root.right, out);
+  out.push(root.value); // visit node last, once both children are done
+
+  return out;
+}
+
+/**
+ * maxDepth: height of the tree (number of nodes on the longest root-to-leaf path).
+ *
+ * Base case: an empty tree has depth 0.
+ * Magic line: a node's depth is 1 (itself) + whichever child subtree is
+ * taller. This is a post-order shape even though there's no explicit
+ * `out` array — the recursive calls (children) must finish before the
+ * `+ 1 + Math.max(...)` line can run.
+ *
+ * @example
+ *        1
+ *       / \
+ *      2   3
+ *     /
+ *    4
+ * maxDepth(root) // 3  (path 1 -> 2 -> 4)
+ */
+export function maxDepth(root: TreeNode | null): number {
+  if (root === null) return 0; // base case
+
+  const leftDepth = maxDepth(root.left);
+  const rightDepth = maxDepth(root.right);
+
+  return 1 + Math.max(leftDepth, rightDepth);
+}
