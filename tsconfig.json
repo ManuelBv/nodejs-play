@@ -14,6 +14,6 @@
     "ignoreDeprecations": "6.0",
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*", "tests/**/*", "libs/**/*"],
+  "include": ["src/**/*", "tests/**/*", "libs/**/*", "exercises/**/*"],
   "exclude": ["node_modules"]
 }
