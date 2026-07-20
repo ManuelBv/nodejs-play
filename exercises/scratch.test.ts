@@ -1,4 +1,4 @@
-import { scratch } from "./scratch.1";
+import { scratch } from "./scratch";
 
 describe("scratch", () => {
   it.each([
